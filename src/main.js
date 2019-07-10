@@ -6,6 +6,14 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 import 'amfe-flexible'
 import './styles/index.less'
+import zhCN from 'vee-validate/dist/locale/zh_CN' // 设置验证提示信息为中文
+import VeeValidate, { Validator } from 'vee-validate' // 表单验证插件
+
+Vue.use(VeeValidate, {
+  // 配置改变的时候去触发 默认是input
+  events: ''
+})
+Validator.localize('zh_CN', zhCN)
 
 Vue.use(Vant)
 
