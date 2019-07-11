@@ -1,12 +1,15 @@
 <template>
   <div>
     <div class="home">
-      <van-nav-bar title="首页" />
+      <van-nav-bar title="首页" fixed=""/>
       <!--
         activeChannelIndex 绑定当前激活的标签页，使用索引
       -->
-      <van-tabs v-model="activeChannelIndex">
-        <van-tab title="标签 1">
+      <van-tabs van-tabs__content class="channel-tabs" v-model="activeChannelIndex">
+        <van-tab
+        v-for="channelItem in channels"
+        :key="channelItem.id"
+        :title="channelItem.name">
           <!--
             下拉刷新
             isLoading 用来控制下拉刷新的 loading 状态
@@ -27,15 +30,13 @@
             </van-list>
           </van-pull-refresh>
         </van-tab>
-        <van-tab title="标签 2">内容 2</van-tab>
-        <van-tab title="标签 3">内容 3</van-tab>
-        <van-tab title="标签 4">内容 4</van-tab>
       </van-tabs>
     </div>
   </div>
 </template>
 
 <script>
+import { getUserChannels } from '@/api/channel'
 export default {
   name: 'HomeIndex',
   data () {
@@ -44,10 +45,35 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      isLoading: false
+      isLoading: false,
+      channels: [] // 存储频道列表
     }
   },
+  created () {
+    this.loadChannels()
+  },
   methods: {
+    async loadChannels () {
+      const { user } = this.$store.state
+      let channels = []
+      // 判断是否登录
+      if (user) { // 如果已登录
+        const data = await getUserChannels()
+        channels = data.channels
+      } else {
+        // 未登录
+        // 如果有本地存储频道数据则请求获取默认推荐频道列表
+        const locaChannels = JSON.parse(window.localStorage.getItem('channels'))
+        if (locaChannels) {
+          channels = locaChannels
+        } else {
+          // 如果没有本地存储频道列表数据则请求获取默认推荐频道列表
+          const data = await getUserChannels()
+          channels = data.locaChannels
+        }
+      }
+      this.channels = channels
+    },
     onLoad () {
       console.log('onLoad')
       // 异步更新数据
@@ -74,4 +100,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.channel-tabs{
+  margin-bottom: 100px;
+}
+.channel-tabs /deep/ .van-tabs__wrap{
+  position:fixed;
+  top:92px;
+}
+.channel-tabs /deep/ .van-tabs__content{
+margin-top: 100px;
+}
 </style>
