@@ -1,6 +1,9 @@
 <template>
   <div>
-    <p>layout component</p>
+    <!-- 缓存路由组件-->
+    <keep-alive>
+      <router-view/>
+    </keep-alive>
   </div>
 </template>
 
