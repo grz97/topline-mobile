@@ -102,8 +102,18 @@ export default {
      */
     async onLoad () {
       console.log('onLoad')
+      await this.$sleep(800)
       let data = []
       data = await this.loadArticles()
+      // 如果没有pre_timestamp,并且数组是空的，则意味着没有数据
+      if (!data.pre_timestamp && !data.results.length) {
+        // 设置该频道数据已加载完毕 组件会自动给出提示，并且不再用onload
+        this.activeChannel.upPullFinished = true
+        // 取消loading
+        this.activeChannel.upPullLoading = false
+        // 代码不要往后执行了
+        return
+      }
       // pre_timestamp 下一页的页码，{上次时间点推荐的数据}
       // results 文章列表
       // 没有最新数据 那就加载上一次推荐数据
