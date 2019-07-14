@@ -16,5 +16,11 @@ export const getUserChannels = () => {
 /**
  * 获取所有频道列表
  * 已登录 携带token：用户频道列表数据
- * 未登录：推荐频道列表
+ * 未登录：推荐频道列表1
  */
+export const getAllChannels = () => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/channels'
+  })
+}

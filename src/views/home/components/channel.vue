@@ -35,9 +35,12 @@
         </div>
       </div>
       <van-grid class="channel-content" :gutter="10" clickable>
-        <van-grid-item v-for="value in 8" :key="value" text="文字">
+        <van-grid-item
+        v-for="item in recommendChannels"
+        :key="item.id"
+        @click="handleAddChannel(item)">
           <div class="info">
-            <span class="text">文字</span>
+            <span class="text">{{item.name}}</span>
           </div>
         </van-grid-item>
       </van-grid>
@@ -47,6 +50,7 @@
 </template>
 
 <script>
+import { getAllChannels } from '@/api/channel'
 export default {
   name: 'HomeChannel',
   props: {
@@ -64,7 +68,33 @@ export default {
     }
   },
   data () {
-    return {}
+    return {
+      allChannels: [] // 所有的频道列表
+    }
+  },
+  computed: {
+    /** 计算属性会监视内部依赖的实例中的成员，当数据发生改变，它会重新调用计算
+     * 该计算属性用于处理获取推荐数据（也就是不包含用户频道列表的其它所有频道列表）
+     */
+    recommendChannels () {
+      // 拿到所有重复的数据 id
+      const duplicates = this.userChannels.map(item => item.id)
+      return this.allChannels.filter(item => !duplicates.includes(item.id))
+    }
+  },
+
+  created () {
+    this.loadAllChannels()
+  },
+  methods: {
+    async loadAllChannels () {
+      const data = await getAllChannels()
+      this.allChannels = data.channels
+    },
+    handleAddChannel (item) {
+      // 将点击添加的频道添加到用户频道中
+      this.userChannels.push(item)
+    }
   }
 }
 </script>
@@ -88,7 +118,7 @@ export default {
   }
   .channel-content {
     .text {
-      font-size: 28px;
+      font-size: 24px;
     }
     .active {
       color: red;
