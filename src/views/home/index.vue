@@ -57,7 +57,7 @@
       <HomeChannel
         v-model="isChannelShow"
         :user-channels="channels"
-        :active-index="activeChannelIndex"
+         :active-index.sync="activeChannelIndex"
       />
     </div>
   </div>
@@ -98,6 +98,13 @@ export default {
       // 频道数据改变，重新加载当前激活频道的数据
       // 只需将上拉加载更多设置为true，它就会自动去调用onload请求函数
       this.activeChannel.upPullLoading = true
+    },
+    isChannelShow () {
+      // 如果频道面板隐藏了，并且当前频道没有数据，那我们就手动的 onLoad 加载更多
+      if (!this.isChannelShow && !this.activeChannel.articles.length) {
+        this.activeChannel.upPullLoading = true
+        this.onLoad()
+      }
     }
   },
   created () {

@@ -20,7 +20,10 @@
         </div>
       </div>
       <van-grid class="channel-content" :gutter="10" clickable>
-        <van-grid-item v-for="(item,index) in userChannels" :key="item.id">
+        <van-grid-item
+        v-for="(item,index) in userChannels"
+        :key="item.id"
+        @click="handleUserChannelClick(item,index)">
           <span class="text" :class="{active:index===activeIndex && !isEdit}">{{item.name}}</span>
           <van-icon class="close-icon" name="close" v-show="isEdit"/>
         </van-grid-item>
@@ -51,7 +54,7 @@
 </template>
 
 <script>
-import { getAllChannels } from '@/api/channel'
+import { getAllChannels, deleteUserChannel } from '@/api/channel'
 import { mapState } from 'vuex'
 export default {
   name: 'HomeChannel',
@@ -97,6 +100,24 @@ export default {
       const data = await getAllChannels()
       this.allChannels = data.channels
     },
+    changeChannel (item, index) {
+      this.$emit('update:active-index', index)
+      this.$emit('input', false)
+    },
+    async deleteChannel (item, index) {
+      this.userChannels.splice(index, 1)
+      // 手动的设置一下当前激活的标签索引，用来触发那个onload调用，
+      // 否则可能会看不到那个数据
+      // this.$emit('update:active-index', 1)
+      if (this.user) {
+        // 登录 发请求删除
+        await deleteUserChannel(item.id)
+        return
+      }
+      // 未登录 删除本地存储的数据
+      window.localStorage.setItem('channels', JSON.stringify(this.userChannels))
+    },
+
     handleAddChannel (item) {
       // 将点击添加的频道添加到用户频道中
       this.userChannels.push(item)
@@ -112,6 +133,15 @@ export default {
       // 如果未登录，则将数据持久化到本地存储
       window.localStorage.setItem('channels', JSON.stringify(this.userChannels))
       console.log(this.userChannels)
+    },
+    handleUserChannelClick (item, index) {
+      // 如果是编辑状态：切换频道
+      if (this.isEdit) {
+        this.changeChannel(item, index)
+      } else {
+        // 如果是非编辑状态：删除频道
+        this.deleteChannel(item, index)
+      }
     }
   }
 }
