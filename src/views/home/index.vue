@@ -6,7 +6,7 @@
         activeChannelIndex 绑定当前激活的标签页，使用索引
       -->
       <van-tabs van-tabs__content class="channel-tabs" v-model="activeChannelIndex">
-         <div slot="nav-right" class="wap-nav"  @click="isChannelShow = true">
+        <div slot="nav-right" class="wap-nav" @click="isChannelShow = true">
           <van-icon name="wap-nav" />
         </div>
         <van-tab v-for="channelItem in channels" :key="channelItem.id" :title="channelItem.name">
@@ -17,10 +17,11 @@
             @refresh 当下拉刷新的时候会触发
           -->
           <van-pull-refresh
-          v-model="channelItem.downPullLoading"
-          @refresh="onRefresh"
-          :success-text="channelItem.downPullSuccessText"
-          :success-duration="1000">
+            v-model="channelItem.downPullLoading"
+            @refresh="onRefresh"
+            :success-text="channelItem.downPullSuccessText"
+            :success-duration="1000"
+          >
             <!--
               列表组件：主要提供上拉加载更多的功能
               loading 用来控制加载中 loading 状态
@@ -44,13 +45,20 @@
           </van-pull-refresh>
         </van-tab>
         <!--频道管理组件 -->
-       <!--
+        <!--
          v-model实际上是
          v-bind：value="数据"
          v-on:input="数据=$event"
-       -->
-       <HomeChannel v-model="isChannelShow"/>
+        -->
+        <!-- <HomeChannel v-model="isChannelShow"
+        :user-channels="channels"
+        :active-index="activeChannelIndex"/> -->
       </van-tabs>
+      <HomeChannel
+        v-model="isChannelShow"
+        :user-channels="channels"
+        :active-index="activeChannelIndex"
+      />
     </div>
   </div>
 </template>
