@@ -15,13 +15,14 @@
           <span class="desc">点击进入频道</span>
         </div>
         <div>
-          <van-button type="danger" plain size="mini">编辑</van-button>
+          <van-button type="danger" plain size="mini"
+          @click="isEdit = !isEdit">{{isEdit? '完成':'编辑'}}</van-button>
         </div>
       </div>
       <van-grid class="channel-content" :gutter="10" clickable>
         <van-grid-item v-for="(item,index) in userChannels" :key="item.id">
-          <span class="text" :class="{active:index===activeIndex}">{{item.name}}</span>
-          <van-icon class="close-icon" name="close" />
+          <span class="text" :class="{active:index===activeIndex && !isEdit}">{{item.name}}</span>
+          <van-icon class="close-icon" name="close" v-show="isEdit"/>
         </van-grid-item>
       </van-grid>
     </div>
@@ -70,7 +71,8 @@ export default {
   },
   data () {
     return {
-      allChannels: [] // 所有的频道列表
+      allChannels: [], // 所有的频道列表
+      isEdit: false
     }
   },
   computed: {
