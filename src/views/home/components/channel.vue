@@ -51,6 +51,7 @@
 
 <script>
 import { getAllChannels } from '@/api/channel'
+import { mapState } from 'vuex'
 export default {
   name: 'HomeChannel',
   props: {
@@ -80,7 +81,10 @@ export default {
       // 拿到所有重复的数据 id
       const duplicates = this.userChannels.map(item => item.id)
       return this.allChannels.filter(item => !duplicates.includes(item.id))
-    }
+    },
+    // Vuex的辅助方法，用来将state中的数据映射到本地计算属性
+    // 就是 user= thandleAddChannel
+    ...mapState(['user'])
   },
 
   created () {
@@ -94,6 +98,18 @@ export default {
     handleAddChannel (item) {
       // 将点击添加的频道添加到用户频道中
       this.userChannels.push(item)
+      // 持久化 ：
+      // const {user} = handleAddChannel
+      // 如果用户已登录，则将数据请求添加到后端
+      // 如果未登录，则将数据持久化到本地存储
+      // const { user } = this.$store.state
+      if (this.user) {
+        // 如果用户已登录，则将数据请求添加到后端
+        return
+      }
+      // 如果未登录，则将数据持久化到本地存储
+      window.localStorage.setItem('channels', JSON.stringify(this.userChannels))
+      console.log(this.userChannels)
     }
   }
 }

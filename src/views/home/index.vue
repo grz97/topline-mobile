@@ -115,11 +115,11 @@ export default {
       } else {
         // 未登录
         // 如果有本地存储频道数据则请求获取默认推荐频道列表
-        const locaChannels = JSON.parse(
+        const localChannels = JSON.parse(
           window.localStorage.getItem('channels')
         )
-        if (locaChannels) {
-          channels = locaChannels
+        if (localChannels) {
+          channels = localChannels
         } else {
           // 如果没有本地存储频道列表数据则请求获取默认推荐频道列表
           const data = await getUserChannels()
