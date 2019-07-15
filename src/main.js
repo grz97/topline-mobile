@@ -10,7 +10,11 @@ import zhCN from 'vee-validate/dist/locale/zh_CN' // 设置验证提示信息为
 import VeeValidate, {
   Validator
 } from 'vee-validate' // 表单验证插件
-
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn' // 加载中文语言包
+import relativeTime from 'dayjs/plugin/relativeTime' // dayjs 的相对时间插件
+dayjs.extend(relativeTime) // 把插件注册到dayjs中
+dayjs.locale('zh-cn') // 配置使用中文语言包
 Vue.use(VeeValidate, {
   // 配置改变的时候去触发 默认是input
   events: ''
