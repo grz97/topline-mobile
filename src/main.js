@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import Vant from 'vant'
+import Vant, { Lazyload } from 'vant'
 import 'vant/lib/index.css'
 import 'amfe-flexible'
 import './styles/index.less'
@@ -18,6 +18,8 @@ Vue.use(VeeValidate, {
 Validator.localize('zh_CN', zhCN)
 
 Vue.use(Vant)
+// 使用图片懒加载
+Vue.use(Lazyload)
 
 Vue.config.productionTip = false
 // 数据加载完毕 使用定时器缓存请求
