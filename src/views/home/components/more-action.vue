@@ -8,7 +8,7 @@
     <van-cell-group v-if="!isReportShow">
       <van-cell icon="location-o" title="不感兴趣"  @click="handleDislick"/>
       <van-cell icon="location-o" title="反馈垃圾内容" is-link @click="isReportShow = true" />
-      <van-cell icon="location-o" title="拉黑作者" />
+      <van-cell icon="location-o" title="拉黑作者" @click="handleAddBalckList"/>
     </van-cell-group>
 
     <van-cell-group v-else>
@@ -27,6 +27,7 @@
 
 <script>
 import { dislickArticle } from '@/api/article'
+import { addBlacklist } from '@/api/user'
 export default {
   name: 'MoreAction',
   props: {
@@ -53,6 +54,14 @@ export default {
         // this.$emit('input', false)
         // 提示操作成功
         // this.$toast('操作成功')
+      } catch (err) {
+        this.$toast('操作失败')
+      }
+    },
+    async handleAddBalckList  () {
+      try {
+        await addBlacklist(this.currentArticle.aut_id)
+        this.$emit('add-blacklist-success')
       } catch (err) {
         this.$toast('操作失败')
       }
