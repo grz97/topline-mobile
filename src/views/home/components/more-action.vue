@@ -26,7 +26,7 @@
 </template>
 
 <script>
-// import { dislickArticle } from '@/api/article'
+import { dislickArticle } from '@/api/article'
 export default {
   name: 'MoreAction',
   props: {
@@ -44,9 +44,18 @@ export default {
     }
   },
   methods: {
-    handleDislick () {
-      console.log(this.currentArticle)
-      // dislickArticle(文章id？)
+    async handleDislick () {
+      try {
+        await dislickArticle(this.currentArticle.art_id)
+        // 移除客户端的那个文章
+        this.$emit('dislike-success')
+        // 关闭对话框
+        // this.$emit('input', false)
+        // 提示操作成功
+        // this.$toast('操作成功')
+      } catch (err) {
+        this.$toast('操作失败')
+      }
     }
   }
 }
