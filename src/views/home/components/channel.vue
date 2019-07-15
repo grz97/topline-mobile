@@ -25,7 +25,7 @@
         :key="item.id"
         @click="handleUserChannelClick(item,index)">
           <span class="text" :class="{active:index===activeIndex && !isEdit}">{{item.name}}</span>
-          <van-icon class="close-icon" name="close" v-show="isEdit"/>
+          <van-icon class="close-icon" name="close" v-show="isEdit && !aliveChannels.includes(item.name)" />
         </van-grid-item>
       </van-grid>
     </div>
@@ -54,7 +54,12 @@
 </template>
 
 <script>
-import { getAllChannels, deleteUserChannel } from '@/api/channel'
+// import { getAllChannels, deleteUserChannel } from '@/api/channel'
+import {
+  getAllChannels,
+  deleteUserChannel,
+  resetUserChannels
+} from '@/api/channel'
 import { mapState } from 'vuex'
 export default {
   name: 'HomeChannel',
@@ -75,7 +80,8 @@ export default {
   data () {
     return {
       allChannels: [], // 所有的频道列表
-      isEdit: false
+      isEdit: false,
+      aliveChannels: ['推荐']
     }
   },
   computed: {
@@ -118,7 +124,7 @@ export default {
       window.localStorage.setItem('channels', JSON.stringify(this.userChannels))
     },
 
-    handleAddChannel (item) {
+    async handleAddChannel (item) {
       // 将点击添加的频道添加到用户频道中
       this.userChannels.push(item)
       // 持久化 ：
@@ -128,6 +134,13 @@ export default {
       // const { user } = this.$store.state
       if (this.user) {
         // 如果用户已登录，则将数据请求添加到后端
+        const data = this.userChannels.slice(1).map((item, index) => {
+          return {
+            id: item.id, // 频道id
+            seq: index + 2
+          }
+        })
+        await resetUserChannels(data)
         return
       }
       // 如果未登录，则将数据持久化到本地存储
@@ -135,12 +148,13 @@ export default {
       console.log(this.userChannels)
     },
     handleUserChannelClick (item, index) {
-      // 如果是编辑状态：切换频道
-      if (this.isEdit) {
+      // 如果是非编辑状态：切换频道
+      if (!this.isEdit) {
         this.changeChannel(item, index)
       } else {
-        // 如果是非编辑状态：删除频道
-        this.deleteChannel(item, index)
+        // 如果是编辑状态：删除频道
+        // this.deleteChannel(item, index)
+        !this.aliveChannels.includes(item.name) && this.deleteChannel(item, index)
       }
     }
   }
