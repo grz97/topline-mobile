@@ -175,8 +175,6 @@ export default {
     .desc {
       font-size: 12px;
     }
-    .action {
-    }
   }
   .channel-content {
     .text {
