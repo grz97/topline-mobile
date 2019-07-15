@@ -5,7 +5,23 @@
     :showConfirmButton="false"
     closeOnClickOverlay
   >
-    <div>123</div>
+    <van-cell-group v-if="!isReportShow">
+      <van-cell icon="location-o" title="不感兴趣" />
+      <van-cell icon="location-o" title="反馈垃圾内容" is-link @click="isReportShow = true" />
+      <van-cell icon="location-o" title="拉黑作者" />
+    </van-cell-group>
+
+    <van-cell-group v-else>
+      <van-cell icon="arrow-left" @click="isReportShow = false" />
+      <van-cell icon="location-o" title="拉黑作者" />
+      <van-cell icon="location-o" title="拉黑作者" />
+      <van-cell icon="location-o" title="拉黑作者" />
+      <van-cell icon="location-o" title="拉黑作者" />
+      <van-cell icon="location-o" title="拉黑作者" />
+      <van-cell icon="location-o" title="拉黑作者" />
+      <van-cell icon="location-o" title="拉黑作者" />
+      <van-cell icon="location-o" title="拉黑作者" />
+    </van-cell-group>
   </van-dialog>
 </template>
 
@@ -19,7 +35,9 @@ export default {
     }
   },
   data () {
-    return {}
+    return {
+      isReportShow: false
+    }
   }
 }
 </script>
