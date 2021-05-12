@@ -30,7 +30,7 @@
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
     "lint-staged": "^8.1.5",
-    "postcss": "^7.0.17",
+    "postcss": "^8.2.10",
     "postcss-pxtorem": "^4.0.1",
     "vue-template-compiler": "^2.6.10"
   },
